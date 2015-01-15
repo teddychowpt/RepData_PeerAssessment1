@@ -159,7 +159,8 @@ tail( result_data )
 
 
 ```r
-## Set "LC_TIME" to "English_United States.1252" to ensure the language displayed on the plot is English rather than other languages. ##
+## Set "LC_TIME" to "English_United States.1252" to ensure the language 
+## displayed on the plot is English rather than other languages.
 Sys.setlocale("LC_TIME", "English")
 ```
 
