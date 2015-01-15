@@ -60,7 +60,8 @@ And following code is used to process the data into a format  which is suitable 
 ```r
 temp$date <- as.Date( temp$date, format = "%Y-%m-%d" )
 
-temp$time <- strptime( paste( temp$date, temp$interval %/% 100, temp$interval %% 100 ), "%Y-%m-%d %H %M" )
+temp$time <- strptime( paste( temp$date, temp$interval %/% 100, 
+                              temp$interval %% 100 ), "%Y-%m-%d %H %M" )
 
 ## For this part, the missing values in the dataset are ignored.
 temp2 <- subset( temp, !( is.na( temp[ "steps" ] ) ) )
@@ -167,7 +168,10 @@ Sys.setlocale("LC_TIME", "English")
 ```
 
 ```r
-hist( result_data$steps, col = "blue", main = paste( "Histogram of Total Number of Steps Taken Each Day" ), xlab = "Total number of steps taken each day", ylab = "Frequency", breaks = 50, xlim = c( 0, 25000 ) )
+hist( result_data$steps, col = "blue", 
+      main = paste( "Histogram of Total Number of Steps Taken Each Day" ), 
+      xlab = "Total number of steps taken each day", ylab = "Frequency", 
+      breaks = 50, xlim = c( 0, 25000 ) )
 ```
 
 ![](PA1_template_files/figure-html/make_a_histogram-1.png) 
@@ -243,7 +247,9 @@ tail( result_data )
 ```
 
 ```r
-plot( result_data$interval, result_data$steps, type = "l", xlab = "5-Minute Interval", ylab = "Average number of steps", col = "blue" )
+plot( result_data$interval, result_data$steps, type = "l", 
+      xlab = "5-Minute Interval", ylab = "Average number of steps", 
+      col = "blue" )
 ```
 
 ![](PA1_template_files/figure-html/make_a_time_series_plot-1.png) 
@@ -442,7 +448,10 @@ tail( new_data )
 ```
 
 ```r
-hist( new_data$steps, col = "blue", main = paste( "Histogram of Total Number of Steps Taken Each Day" ), xlab = "Total number of steps taken each day", ylab = "Frequency", breaks = 50, xlim = c( 0, 25000 ) )
+hist( new_data$steps, col = "blue", 
+      main = paste( "Histogram of Total Number of Steps Taken Each Day" ), 
+      xlab = "Total number of steps taken each day", ylab = "Frequency", 
+      breaks = 50, xlim = c( 0, 25000 ) )
 ```
 
 ![](PA1_template_files/figure-html/make_a_histogram_with_new_dataset-1.png) 
@@ -476,7 +485,7 @@ Hence, the impact of imputing missing data on the estimates of the total daily n
 
 For this part, the ```weekdays()``` function and the dataset with the filled-in missing values are used.
 
-1. Following code is used to create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day:
+1. Following code is used to create a new factor variable in the dataset with two levels - "**weekday**" and "**weekend**" indicating whether a given date is a weekday or weekend day:
 
 
 ```r
@@ -547,7 +556,9 @@ new_data <- aggregate( steps ~ interval + weekdays, data = temp, mean )
 
 library(lattice) 
 
-xyplot( steps ~ interval|weekdays, data = new_data, type = "l", layout = c( 1, 2 ), xlab = "5-Minute Interval", ylab = "Average number of steps", col = "blue" )
+xyplot( steps ~ interval|weekdays, data = new_data, type = "l", 
+        xlab = "5-Minute Interval", ylab = "Average number of steps", 
+        col = "blue", layout = c( 1, 2 ) )
 ```
 
 ![](PA1_template_files/figure-html/make_a_panel_plot_containing_a_time_series_plot-1.png) 
