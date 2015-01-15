@@ -1,0 +1,295 @@
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: true
+---
+
+PA1_template.Rmd Version 1.0
+
+==================================================================
+
+* Author: Po Tak Chow, Teddy
+* Email: teddychowpt@gmail.com
+
+==================================================================
+
+#### Introduction
+
+This assignment is to make use of data recorded from a personal activity monitoring device, which collected the data at 5 minute intervals through out the day, to do some statistical analysis and to prepare this report.
+
+The data consists of two months of data from an anonymous user who took measurements on himself regularly during the months of October and November, 2012, including the number of steps taken in 5 minute intervals each day.
+
+The entire assignment is completed in a **single** R markdown document and processed by **knitr** to transform it into a HTML file.
+
+Detailed instructions can be obtained by accessing the link below:
+
+* https://github.com/rdpeng/RepData_PeerAssessment1/blob/master/README.md
+
+#### Data
+
+The data for this assignment is downloaded from the course web site with the link shown as follows:
+
+* Dataset: Activity monitoring data [52KB]
+
+* Link: https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip
+
+* File Name: activity.csv [342KB]
+
+There are 3 variables are included in this dataset listed as follows:
+
+* **steps**: The number of steps taking in a 5-minute interval (with missing values coded as NA)
+
+* **date**: The date on which the measurement was taken in YYYY-MM-DD format
+
+* **interval**: Identifier for the 5-minute interval in which measurement was taken
+
+Remark: The dataset is stored in a comma-separated-value (CSV) file and totally, 17,568 observations are included in this dataset.
+
+#### Loading and preprocessing the data
+
+Following code is used to load the data from the dataset file ( "activity.csv" ):
+
+```{r loading_the_data, echo = TRUE}
+
+dataSet <- "activity.zip"
+
+temp = data.frame()
+
+temp <- read.csv( unz( dataSet, "activity.csv" ), header = TRUE, sep = "," )
+
+```
+
+And following code is used to process the data into a format  which is suitable for analysis use:
+
+```{r preprocessing_the_data, echo = TRUE}
+
+temp$date <- as.Date( temp$date, format = "%Y-%m-%d" )
+
+temp$time <- strptime( paste( temp$date, temp$interval %/% 100, temp$interval %% 100 ), "%Y-%m-%d %H %M" )
+
+## For this part, the missing values in the dataset are ignored.
+temp2 <- subset( temp, !( is.na( temp[ "steps" ] ) ) )
+
+## Show the data structure for checking.
+str( temp2 )
+
+## Show the first six rows of data for checking the format.
+head( temp2 )
+
+## Show the last six rows of data for checking the format.
+tail( temp2 )
+
+## To process the data to calculate the total number of steps taken per day.
+result_data = data.frame()
+result_data <- aggregate( steps ~ date, data = temp2, sum )
+
+## Show the data structure for checking.
+str( result_data )
+
+## Show the first six rows of data for checking the format.
+head( result_data )
+
+## Show the last six rows of data for checking the format.
+tail( result_data )
+
+```
+
+#### What is mean total number of steps taken per day?
+
+1. Following is the code used to make a histogram of the total number of steps taken each day:
+
+```{r make_a_histogram, echo = TRUE}
+
+## Set "LC_TIME" to "English_United States.1252" to ensure the language displayed on the plot is English rather than other languages. ##
+Sys.setlocale("LC_TIME", "English")
+
+hist( result_data$steps, col = "blue", main = paste( "Histogram of Total Number of Steps Taken Each Day" ), xlab = "Total number of steps taken each day", ylab = "Frequency", breaks = 50, xlim = c( 0, 25000 ) )
+
+```
+
+2. Following code is used to calculate and report the **mean** and **median** total number of steps taken per day:
+
+```{r mean_and_median_total_number_of_steps_taken_per_day, echo = TRUE}
+
+## Calculate and report the mean total number of steps taken per day.
+mean( result_data$steps )
+
+## Calculate and report the median total number of steps taken per day.
+median( result_data$steps )
+
+```
+
+#### What is the average daily activity pattern?
+
+1. Following code is used to make a time series plot  (```type = "l"```) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis):
+
+```{r make_a_time_series_plot, echo = TRUE}
+
+## To process the data to calculate the average number of steps taken in each 5-minute interval.
+result_data <- aggregate( steps ~ interval, data = temp2, mean )
+
+## Show the data structure for checking.
+str( result_data )
+
+## Show the first six rows of data for checking the format.
+head( result_data )
+
+## Show the last six rows of data for checking the format.
+tail( result_data )
+
+plot( result_data$interval, result_data$steps, type = "l", xlab = "5-Minute Interval", ylab = "Average number of steps", col = "blue" )
+
+```
+
+2. Following is the code used to find out which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps:
+
+```{r interval_contain_max_no_of_steps, echo = TRUE}
+
+## Find the maximum number of steps in the dataset.
+max( result_data$steps )
+
+## Find out which 5-minute interval contains the maximum number of steps.
+result_data$interval[ which( result_data[ "steps" ] == max( result_data$steps ) ) ]
+
+```
+
+#### Imputing missing values
+
+As noted that there are a number of days or intervals where are missing values and coded as ```NA```, the presence of missing days may introduce bias into some calculations or summaries of the data.
+
+```{r check_temp, echo = TRUE}
+
+## Show the data structure for checking.
+str( temp )
+
+## Show the first six rows of data for checking the format.
+head( temp )
+
+## Show the last six rows of data for checking the format.
+tail( temp )
+
+```
+
+1. Following code is used to calculate and report the total number of rows with ```NA``` marked in the dataset:
+
+```{r total_number_of_rows_with_NA, echo = TRUE}
+
+## Calculate and report the total number of rows with NA marked in the dataset
+length( which( is.na( temp$steps ) ) )
+
+```
+
+2. In order to fill in all of the missing values in the dataset, the mean for that 5-minute interval is selected to be used, and its value is shown as follows:
+
+```{r mean_for_5-minute_interval, echo = TRUE}
+
+## Calculate and report the mean for that 5-minute interval.
+mean( result_data$steps )
+
+```
+
+3. Following is the code used to create a new dataset that is equal to the original dataset, but with the missing data filled in:
+
+```{r create_new_dataset, echo = TRUE}
+
+new_data = data.frame()
+
+new_data <- temp
+
+## To fill in all of the missing values in the dataset.
+new_data$steps[ is.na( new_data$steps ) ] <- mean( result_data$steps )
+
+## Show the data structure for checking.
+str( new_data )
+
+## Show the first six rows of data for checking the format.
+head( new_data )
+
+## Show the last six rows of data for checking the format.
+tail( new_data )
+
+```
+
+4. Following code is used to make a histogram of the total number of steps taken each day:
+
+```{r make_a_histogram_with_new_dataset, echo = TRUE}
+
+## To process the data to calculate the total number of steps taken each day.
+new_data <- aggregate( steps ~ date, data = new_data, sum )
+
+## Show the data structure for checking.
+str( new_data )
+
+## Show the first six rows of data for checking the format.
+head( new_data )
+
+## Show the last six rows of data for checking the format.
+tail( new_data )
+
+hist( new_data$steps, col = "blue", main = paste( "Histogram of Total Number of Steps Taken Each Day" ), xlab = "Total number of steps taken each day", ylab = "Frequency", breaks = 50, xlim = c( 0, 25000 ) )
+
+```
+
+4. Following code is used to calculate and report the **mean** and **median** total number of steps taken per day:
+
+```{r calcuate_mean_and_median_with_new_dataset, echo = TRUE}
+
+## Calculate and report the mean total number of steps taken per day.
+mean( new_data$steps )
+
+## Calculate and report the median total number of steps taken per day.
+median( new_data$steps )
+
+```
+
+By the result shown above, the value of this mean is the same as the estimate from the first part of the assignment, but the value of this median is different from the estimate.
+
+Hence, the impact of imputing missing data on the estimates of the total daily number of steps may cause the estimated median with bias.
+
+#### Are there differences in activity patterns between weekdays and weekends?
+
+For this part, the ```weekdays()``` function and the dataset with the filled-in missing values are used.
+
+1. Following code is used to create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day:
+
+```{r create_a_new_factor_variable, echo = TRUE}
+
+new_data <- temp
+
+new_data$steps[ is.na( new_data$steps ) ] <- mean( result_data$steps )
+
+new_data$weekdays <- weekdays( new_data$date )
+
+new_data$weekdays[ which( new_data$weekdays == "Monday" ) ] <- "weekday"
+new_data$weekdays[ which( new_data$weekdays == "Tuesday" ) ] <- "weekday"
+new_data$weekdays[ which( new_data$weekdays == "Wednesday" ) ] <- "weekday"
+new_data$weekdays[ which( new_data$weekdays == "Thursday" ) ] <- "weekday"
+new_data$weekdays[ which( new_data$weekdays == "Friday" ) ] <- "weekday"
+new_data$weekdays[ which( new_data$weekdays == "Saturday" ) ] <- "weekend"
+new_data$weekdays[ which( new_data$weekdays == "Sunday" ) ] <- "weekend"
+
+## Show the data structure for checking.
+str( new_data )
+
+## Show the first six rows of data for checking the format.
+head( new_data )
+
+## Show the last six rows of data for checking the format.
+tail( new_data )
+
+```
+
+2. Following code is used to make a panel plot containing a time series plot (```type = "l"```) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis):
+
+```{r make_a_panel_plot_containing_a_time_series_plot, echo = TRUE}
+
+temp <- new_data
+
+new_data <- aggregate( steps ~ interval + weekdays, data = temp, mean )
+
+library(lattice) 
+
+xyplot( steps ~ interval|weekdays, data = new_data, type = "l", layout = c( 1, 2 ), xlab = "5-Minute Interval", ylab = "Average number of steps", col = "blue" )
+
+```
