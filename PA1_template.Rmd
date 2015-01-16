@@ -98,7 +98,7 @@ tail( result_data )
 
 #### What is mean total number of steps taken per day?
 
-1. Following is the code used to make a histogram of the total number of steps taken each day:
+**1**. Following is the code used to make a histogram of the total number of steps taken each day:
 
 ```{r make_a_histogram, echo = TRUE}
 
@@ -113,7 +113,7 @@ hist( result_data$steps, col = "blue",
 
 ```
 
-2. Following code is used to calculate and report the **mean** and **median** total number of steps taken per day:
+**2**. Following code is used to calculate and report the **mean** and **median** total number of steps taken per day:
 
 ```{r mean_and_median_total_number_of_steps_taken_per_day, echo = TRUE}
 
@@ -127,7 +127,7 @@ median( result_data$steps )
 
 #### What is the average daily activity pattern?
 
-1. Following code is used to make a time series plot  (```type = "l"```) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis):
+**1**. Following code is used to make a time series plot  (```type = "l"```) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis):
 
 ```{r make_a_time_series_plot, echo = TRUE}
 
@@ -149,7 +149,7 @@ plot( result_data$interval, result_data$steps, type = "l",
 
 ```
 
-2. Following is the code used to find out which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps:
+**2**. Following is the code used to find out which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps:
 
 ```{r interval_contain_max_no_of_steps, echo = TRUE}
 
@@ -178,7 +178,7 @@ tail( temp )
 
 ```
 
-1. Following code is used to calculate and report the total number of rows with ```NA``` marked in the dataset:
+**1**. Following code is used to calculate and report the total number of rows with ```NA``` marked in the dataset:
 
 ```{r total_number_of_rows_with_NA, echo = TRUE}
 
@@ -187,7 +187,7 @@ length( which( is.na( temp$steps ) ) )
 
 ```
 
-2. In order to fill in all of the missing values in the dataset, the mean for that 5-minute interval is selected to be used, and its value is shown as follows:
+**2**. In order to fill in all of the missing values in the dataset, the mean for that 5-minute interval is selected to be used, and its value is shown as follows:
 
 ```{r mean_for_5-minute_interval, echo = TRUE}
 
@@ -196,7 +196,7 @@ mean( result_data$steps )
 
 ```
 
-3. Following is the code used to create a new dataset that is equal to the original dataset, but with the missing data filled in:
+**3**. Following is the code used to create a new dataset that is equal to the original dataset, but with the missing data filled in:
 
 ```{r create_new_dataset, echo = TRUE}
 
@@ -218,7 +218,7 @@ tail( new_data )
 
 ```
 
-4. Following code is used to make a histogram of the total number of steps taken each day:
+**4**. Following code is used to make a histogram of the total number of steps taken each day:
 
 ```{r make_a_histogram_with_new_dataset, echo = TRUE}
 
@@ -241,7 +241,7 @@ hist( new_data$steps, col = "blue",
 
 ```
 
-4. Following code is used to calculate and report the **mean** and **median** total number of steps taken per day:
+**4**. Following code is used to calculate and report the **mean** and **median** total number of steps taken per day:
 
 ```{r calcuate_mean_and_median_with_new_dataset, echo = TRUE}
 
@@ -261,7 +261,7 @@ Hence, the impact of imputing missing data on the estimates of the total daily n
 
 For this part, the ```weekdays()``` function and the dataset with the filled-in missing values are used.
 
-1. Following code is used to create a new factor variable in the dataset with two levels - "**weekday**" and "**weekend**" indicating whether a given date is a weekday or weekend day:
+**1**. Following code is used to create a new factor variable in the dataset with two levels - "**weekday**" and "**weekend**" indicating whether a given date is a weekday or weekend day:
 
 ```{r create_a_new_factor_variable, echo = TRUE}
 
@@ -290,7 +290,7 @@ tail( new_data )
 
 ```
 
-2. Following code is used to make a panel plot containing a time series plot (```type = "l"```) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis):
+**2**. Following code is used to make a panel plot containing a time series plot (```type = "l"```) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis):
 
 ```{r make_a_panel_plot_containing_a_time_series_plot, echo = TRUE}
 
